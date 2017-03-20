@@ -1,0 +1,10 @@
+// www
+// Cirtual Coding Challenge
+// File to configure port and start server
+// author: Zhanwen "Phil" Chen
+
+// Create a REST "chat" API using NodeJS, some form of authentication such as Basic HTTP Authentication or simply sending a username and password, and MySQL. Your API must include endpoints that at the very least implement the following functions: register, send message, get messages, list users, search users. As a bonus point, you can add support for a basic profile that is editable by a user and viewable by anyone. You do not have to create a UI for this project, but instead include sufficient documentation for each endpoint. There should be some basic input validation/sanitization so as to prevent "invalid" data and MySQL injection.
+//
+// The endpoints for send message, get messages, and edit profile should have some sort of authentication preventing other users acting on their behalf.
+//
+// We will ask that you submit a link to the repository containing the code, documentation of the endpoints (and anything else you deem necessary), instructions on how to build and run the server, and a MySQL dump of your database.

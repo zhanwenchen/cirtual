@@ -1,0 +1,11 @@
+{
+  "name": "cirtual",
+  "version": "1.0.0",
+  "description": "Zhanwen \"Phil\" Chen's solution to Cirtual Coding Challenge",
+  "scripts": {
+    "start": "node server/bin/www",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Zhanwen \"Phil\" Chen",
+  "license": "ISC"
+}
