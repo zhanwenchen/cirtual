@@ -1,10 +1,17 @@
-var socketio = require('socket.io')
+// Load utils
+const {generateMessage, generateLocationMessage} = require('../utils/message');
+const {isRealString} = require('../utils/validation');
+const {Users} = require('../utils/users');
+var socketio = require('socket.io');
+
 
 module.exports.listen = (app) => {
+    var users = new Users();
+
     io = socketio.listen(app)
 
-    users = io.of('/users')
-    users.on('connection', (socket) => {
+    user_channel = io.of('/user')
+    user_channel.on('connection', (socket) => {
     });
 
     io.on('connection', (socket) => {
