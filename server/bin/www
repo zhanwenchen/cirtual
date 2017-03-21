@@ -34,25 +34,21 @@ app.set('port', port);
 
 var server = http.createServer(app);
 
+var io = require('../sockets/sockets').listen(server);
 /**
  * Listen on provided port, on all network interfaces.
  */
 
- models.sequelize.sync().then(function() {
+ models.sequelize.sync().then( () => {
    /**
     * Listen on provided port, on all network interfaces.
     */
-   server.listen(port, function() {
+   server.listen(port, () => {
      debug('Express server listening on port ' + server.address().port);
    });
    server.on('error', onError);
    server.on('listening', onListening);
  });
-//
-// server.listen(port);
-// server.on('error', onError);
-// server.on('listening', onListening);
-
 /**
  * Normalize a port into a number, string, or false.
  */

@@ -40,7 +40,7 @@ module.exports = (passport) => {
 
 	/* Handle Login POST */
 	app.post('/login', passport.authenticate('login', {
-		successRedirect: '/home',
+		successRedirect: '/profile',
 		failureRedirect: '/login',
 		failureFlash : true
 	}));
@@ -53,7 +53,7 @@ module.exports = (passport) => {
 
 	/* Handle Registration POST */
 	app.post('/signup', passport.authenticate('signup', {
-		successRedirect: '/home',
+		successRedirect: '/profile',
 		failureRedirect: '/signup',
 		failureFlash : true
 	}), (req, res) => {
@@ -65,13 +65,75 @@ module.exports = (passport) => {
 	// 	console.log(req.body.email);
 	// });
 
-	/* GET Home Page */
-	app.get('/home', isAuthenticated, (req, res) => {
-		// console.log('in /home. req.user.id is ', req.user.id);
-		res.render('home', {
+	/* GET Profile Page */
+	app.get('/profile', isAuthenticated, (req, res) => {
+		// console.log('in /profile. req.user.id is ', req.user.id);
+		res.render('profile', {
 			user: req.user
 		});
 	});
+
+	/* GET Chat Page */
+	app.get('/chat', isAuthenticated, (req, res) => {
+		// console.log('in /profile. req.user.id is ', req.user.id);
+		res.render('chat', {
+			// user: req.user
+		});
+	});
+
+	/* GET find user Page */
+	app.get('/user/find', isAuthenticated, (req, res) => {
+		// console.log('in /profile. req.user.id is ', req.user.id);
+		res.render('finduser', {
+			user: req.user
+		});
+	});
+
+	/* POST to find user Page */
+	app.post('/user/find', isAuthenticated, (req, res) => {
+		// console.log('in /profile. req.user.id is ', req.user.id);
+		models.User.findAll({
+			where: {
+				'email': req.body.user_email
+			}
+		}).then( (results) => {
+			console.log('POSTed to /user/find. Results are ', results);
+			if (results) {
+				var users_found = results;
+				res.render('finduser', {
+					user: req.user,
+					users_found: users_found
+				});
+			} else {
+				res.render('finduser', {
+					user: req.user,
+					users_found: users_found,
+					message: req.flash('users not found')
+				});
+			}
+
+		})
+	});
+
+	/* POST to Chat Page */
+	app.post('/chat', isAuthenticated, (req, res) => {
+		// console.log('in /profile. req.user.id is ', req.user.id);
+		models.Message.create({
+			text: req.body.text,
+			sender: req.user.id,
+			room: null
+		}).then( (results) => {
+			console.log('message posted. results = ', results);
+		})
+	});
+
+	// /* Update Profile Page */
+	// app.put('/profile', isAuthenticated, (req, res) => {
+	// 	// console.log('in /profile. req.user.id is ', req.user.id);
+	// 	res.render('profile', {
+	// 		user: req.user
+	// 	});
+	// });
 
 	/* Handle Logout */
 	app.get('/signout', (req, res) => {
@@ -96,6 +158,7 @@ module.exports = (passport) => {
       res.json(users);
     });
   });
+
 
 
   // // JSON endpoint: Create a new user
