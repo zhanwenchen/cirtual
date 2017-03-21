@@ -27,24 +27,28 @@ var isAuthenticated = function (req, res, next) {
 }
 
 
-module.exports = function(passport){
+module.exports = (passport) => {
 
   /* GET login page. */
-	app.get('/', function(req, res) {
-    	// Display the Login page with any flash message, if any
+	app.get('/', (req, res) => {
+    // Display the Login page with any flash message, if any
+		// console.log('in get /')
 		res.render('index', { message: req.flash('message') });
 	});
 
 	/* Handle Login POST */
 	app.post('/login', passport.authenticate('login', {
 		successRedirect: '/home',
-		failureRedirect: '/',
+		failureRedirect: '/login',
 		failureFlash : true
+	}, (req, res) => {
+		console.log('just POSTed to login');
 	}));
 
 	/* GET Registration Page */
-	app.get('/signup', function(req, res){
-		res.render('register',{message: req.flash('message')});
+	app.get('/signup', (req, res) => {
+		res.render('register', {
+			message: req.flash('message')});
 	});
 
 	/* Handle Registration POST */
@@ -52,11 +56,21 @@ module.exports = function(passport){
 		successRedirect: '/home',
 		failureRedirect: '/signup',
 		failureFlash : true
-	}));
+	}), (req, res) => {
+		console.log('just POSTed to signup');
+	});
+
+	// app.post('/signup', (req, res) => {
+	// 	console.log('just POSTed to signup');
+	// 	console.log(req.body.email);
+	// });
 
 	/* GET Home Page */
-	app.get('/home', isAuthenticated, function(req, res){
-		res.render('home', { user: req.user });
+	app.get('/home', isAuthenticated, (req, res) => {
+		res.render('home', {
+			id: req.params.id
+			// user: req.user
+		});
 	});
 
 	/* Handle Logout */

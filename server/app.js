@@ -23,6 +23,9 @@ app.use(express.static(path.join(__dirname, '../client')));
 
 // Configuring Passport
 var passport = require('passport');
+// Initialize Passport
+var initPassport = require('./passport/init');
+initPassport(passport);
 var expressSession = require('express-session');
 app.use(expressSession({secret: 'mySecretKey'}));
 // Initialize Passport and restore any authentication state from session
@@ -36,9 +39,7 @@ var flash = require('connect-flash');
 app.use(flash());
 
 
-// Initialize Passport
-var initPassport = require('./passport/init');
-initPassport(passport);
+
 
 
 // Send routes into passport middleware
