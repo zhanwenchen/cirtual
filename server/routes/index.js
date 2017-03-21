@@ -12,12 +12,8 @@
 const express = require('express');
 const app = express.Router();
 const path = require('path');
-// TODO: change to MySQL
-// const pg = require('pg');
 const sequelize = require('sequelize');
-const connectionString = process.env.DATABASE_URL || 'postgres://localhost:5432/communityhack_test';
-
-
+const passport = require('passport');
 var models = require('../models/index');
 
 // View root page
@@ -26,6 +22,23 @@ app.get('/', (req, res, next) => {
   console.log("__dirname = %s", path.resolve(__dirname));
   res.sendFile(path.join(
     __dirname, '..', '..', 'client', 'views', 'index.html'));
+});
+
+// login function
+app.post('/login',
+  passport.authenticate('local', {
+      successRedirect: '/',
+      failureRedirect: '/login',
+      successFlash: 'Welcome!',
+      failureFlash: 'Invalid username or password.'
+    }
+  )
+);
+
+// logout function with passport
+app.get('/logout', function(req, res){
+  req.logout();
+  res.redirect('/');
 });
 
 // JSON endpoint: Search a single user
@@ -60,17 +73,17 @@ app.post('/user', function(req, res) {
 
 // JSON endpoint: Update a single user
 app.put('/user/:id', function(req, res) {
-  models.Todo.find({
+  models.User.find({
     where: {
       id: req.params.id
     }
-  }).then(function(todo) {
-    if(todo){
+  }).then(function(user) {
+    if(user){
       todo.updateAttributes({
         title: req.body.title,
         complete: req.body.complete
-      }).then(function(todo) {
-        res.send(todo);
+      }).then(function(user) {
+        res.send(user);
       });
     }
   });
