@@ -25,21 +25,35 @@ describe('Testing Users', function() {
 
   // Insert 1 record before each test
   beforeEach(function(done){
-    models.User.create({
-      id: 999,
-      firstName: "Zhanwen",
-      lastName: "Chen",
-      email: "phil.zhanwen.chen@gmail.com"
-    }).success(() => {
-      done();
+    models.User.sync({
+      force: true,
+      logging: console.log
+    }).then(()=>{
+      models.User.create({
+        id: 999,
+        firstName: "Zhanwen",
+        lastName: "Chen",
+        email: "phil.zhanwen.chen@gmail.com"
+      }).then(() => {
+        done();
+      });
     });
   });
 
 
   // Delete inserted record before each test
   afterEach(function(done){
-    User.destroy({ id: 999 }).success(()=>{
-      done();
+    models.User.destroy({
+      where: {
+        id: 999
+      }
+    }).then(()=>{
+      models.User.sync({
+        force: true,
+        logging: console.log
+      }).then(()=>{
+        done();
+      })
     })
   });
 
@@ -53,25 +67,25 @@ describe('Testing Users', function() {
       });
   });
 
-  // Good code
-  it('It should create Fish table, Fish and Eye table with Eye as Fish child', function () {
-    return sequelize.sync({
-      force: true,
-      logging: console.log
-    }).then(() => {
-      return User.create({
-        id: 999,
-        firstName: "Zhanwen",
-        lastName: "Chen",
-        email: "phil.zhanwen.chen@gmail.com"
-      }).then(function () {
-        return Message.create({
-          id: 2,
-          FishId: 2,
-          name: 'Test Eye 2' })
-      });
-    });
-  });
+  // // Good code
+  // it('It should create Fish table, Fish and Eye table with Eye as Fish child', function () {
+  //   return sequelize.sync({
+  //     force: true,
+  //     logging: console.log
+  //   }).then(() => {
+  //     return User.create({
+  //       id: 999,
+  //       firstName: "Zhanwen",
+  //       lastName: "Chen",
+  //       email: "phil.zhanwen.chen@gmail.com"
+  //     }).then(function () {
+  //       return Message.create({
+  //         id: 2,
+  //         FishId: 2,
+  //         name: 'Test Eye 2' })
+  //     });
+  //   });
+  // });
 
   it('should add a SINGLE user on /users POST', function(done) {
     chai.request(server)
