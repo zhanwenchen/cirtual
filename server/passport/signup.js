@@ -42,7 +42,7 @@ module.exports = function(passport){
 						// 	throw err;
 						// }
 						console.log('User Registration succesful');
-						return done(null);
+						return done(null, user.dataValues);
 					});
         }
     });
