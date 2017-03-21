@@ -29,30 +29,41 @@ var isAuthenticated = function (req, res, next) {
 
 module.exports = function(passport){
 
-  // View root page
-  app.get('/', (req, res, next) => {
-    console.log("./ = %s", path.resolve("./"));
-    console.log("__dirname = %s", path.resolve(__dirname));
-    res.sendFile(path.join(
-      __dirname, '..', '..', 'client', 'views', 'index.html'));
-  });
+  /* GET login page. */
+	app.get('/', function(req, res) {
+    	// Display the Login page with any flash message, if any
+		res.render('index', { message: req.flash('message') });
+	});
 
-  // login function
-  app.post('/login',
-    passport.authenticate('login', {
-        successRedirect: '/home',
-        failureRedirect: '/',
-        successFlash: 'Welcome!',
-        failureFlash: 'Invalid username or password.'
-      }
-    )
-  );
+	/* Handle Login POST */
+	app.post('/login', passport.authenticate('login', {
+		successRedirect: '/home',
+		failureRedirect: '/',
+		failureFlash : true
+	}));
 
-  // logout function with passport
-  app.get('/logout', function(req, res){
-    req.logout();
-    res.redirect('/');
-  });
+	/* GET Registration Page */
+	app.get('/signup', function(req, res){
+		res.render('register',{message: req.flash('message')});
+	});
+
+	/* Handle Registration POST */
+	app.post('/signup', passport.authenticate('signup', {
+		successRedirect: '/home',
+		failureRedirect: '/signup',
+		failureFlash : true
+	}));
+
+	/* GET Home Page */
+	app.get('/home', isAuthenticated, function(req, res){
+		res.render('home', { user: req.user });
+	});
+
+	/* Handle Logout */
+	app.get('/signout', function(req, res) {
+		req.logout();
+		res.redirect('/');
+	});
 
   // JSON endpoint: Search a single user
   app.get('/user/:id', function(req, res) {
