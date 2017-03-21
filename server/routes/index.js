@@ -63,6 +63,8 @@ app.get('/users', function(req, res) {
 // JSON endpoint: Create a new user
 app.post('/user', function(req, res) {
   models.User.create({
+    firstName: req.body.firstName,
+    lastName: req.body.lastName,
     email: req.body.email,
     password: req.body.password
   }).then(function(user) {

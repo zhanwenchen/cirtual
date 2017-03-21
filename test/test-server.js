@@ -20,21 +20,22 @@ if (config.use_env_variable) {
                                 config);
 }
 
-describe('Testing Users', function() {
+describe('Testing Users', () => {
 
 
   // Insert 1 record before each test
-  beforeEach(function(done){
+  beforeEach( (done) => {
     models.User.sync({
       force: true,
       logging: console.log
-    }).then(()=>{
+    }).then( () => {
       models.User.create({
         id: 999,
         firstName: "Zhanwen",
         lastName: "Chen",
-        email: "phil.zhanwen.chen@gmail.com"
-      }).then(() => {
+        email: "zhanwenchen@fakemail.com",
+        password: "12345678"
+      }).then( () => {
         done();
       });
     });
@@ -42,66 +43,60 @@ describe('Testing Users', function() {
 
 
   // Delete inserted record before each test
-  afterEach(function(done){
+  afterEach( (done) => {
     models.User.destroy({
       where: {
         id: 999
       }
-    }).then(()=>{
+    }).then( () => {
       models.User.sync({
         force: true,
         logging: console.log
-      }).then(()=>{
+      }).then( () => {
         done();
-      })
+      });
     })
   });
 
 
-  it('should list ALL users on /users GET', function(done) {
+  it('should list ALL users on /users GET', (done) => {
     chai.request(server)
       .get('/users')
-      .end(function(err, res){
+      .end( (err, res) => {
         res.should.have.status(200);
+        res.should.be.json;
+        res.body.should.be.a('array');
+        res.body[0].should.have.property('id');
+        res.body[0].should.have.property('firstName');
+        res.body[0].should.have.property('lastName');
+        res.body[0].firstName.should.equal('Zhanwen');
+        res.body[0].lastName.should.equal('Chen');
+        res.body[0].email.should.equal('zhanwenchen@fakemail.com');
         done();
       });
   });
 
-  // // Good code
-  // it('It should create Fish table, Fish and Eye table with Eye as Fish child', function () {
-  //   return sequelize.sync({
-  //     force: true,
-  //     logging: console.log
-  //   }).then(() => {
-  //     return User.create({
-  //       id: 999,
-  //       firstName: "Zhanwen",
-  //       lastName: "Chen",
-  //       email: "phil.zhanwen.chen@gmail.com"
-  //     }).then(function () {
-  //       return Message.create({
-  //         id: 2,
-  //         FishId: 2,
-  //         name: 'Test Eye 2' })
-  //     });
-  //   });
-  // });
-
-  it('should add a SINGLE user on /users POST', function(done) {
+  it('should add a SINGLE user on /user POST', function(done) {
     chai.request(server)
-      .post('/users')
-      .send({'name': 'Java', 'lastName': 'Script'})
+      .post('/user')
+      .send({
+        'firstName': 'Jada',
+        'lastName': 'Sacco',
+        'email': 'jadasacco@fakemail.com',
+        'password': '12345678'
+      })
       .end(function(err, res){
         res.should.have.status(200);
         res.should.be.json;
         res.body.should.be.a('object');
-        res.body.should.have.property('SUCCESS');
-        res.body.SUCCESS.should.be.a('object');
-        res.body.SUCCESS.should.have.property('name');
-        res.body.SUCCESS.should.have.property('lastName');
-        res.body.SUCCESS.should.have.property('_id');
-        res.body.SUCCESS.name.should.equal('Java');
-        res.body.SUCCESS.lastName.should.equal('Script');
+        res.body.should.be.a('object');
+        res.body.should.have.property('firstName');
+        res.body.should.have.property('lastName');
+        res.body.should.have.property('id');
+        res.body.firstName.should.equal('Jada');
+        res.body.lastName.should.equal('Sacco');
+        res.body.email.should.equal('jadasacco@fakemail.com');
+        res.body.password.should.equal('12345678');
         done();
       });
     });
