@@ -12,16 +12,20 @@ module.exports = function(passport){
     findOrCreateUser = () => {
 	    // find a user in MySQL with provided email
 	    models.User.findOne({
-				'email' :  email
-			}).then( (err, user) => {
+				where: {
+					'email' :  email
+				}
+			}).then( (user) => {
         // In case of any error, return using the done method
-        if (err){
-            console.log('Error in SignUp: '+err);
-            return done(err);
-        }
+        // if (err){
+        //     console.log('Error in SignUp: '+err);
+				// 		console.log(err.stack);
+        //     return done(err);
+        // }
         // already exists
         if (user) {
             console.log('User already exists with email: ' + email);
+						console.log(user);
             return done(null, false, req.flash('message','User Already Exists'));
         } else {
           // if there is no user with that email, create the user
@@ -31,11 +35,12 @@ module.exports = function(passport){
 						firstName: req.body.firstName,
 						lastName: req.body.lastName,
 						password: createHash(password)
-					}).then( (err) => {
-						if (err) {
-							console.log('Error in Saving user: '+err);
-							throw err;
-						}
+					}).then( (user) => {
+						// if (err) {
+						// 	console.log('Error in Saving user: '+err);
+						// 	console.log(err);
+						// 	throw err;
+						// }
 						console.log('User Registration succesful');
 						return done(null);
 					});

@@ -16,10 +16,11 @@ const sequelize = require('sequelize');
 var models = require('../models/index');
 
 
-var isAuthenticated = function (req, res, next) {
+var isAuthenticated = (req, res, next) => {
 	// if user is authenticated in the session, call the next() to call the next request handler
 	// Passport adds this method to request object. A middleware is allowed to add properties to
 	// request and response objects
+	console.log('in isAuthenticated')
 	if (req.isAuthenticated())
 		return next();
 	// if the user is not authenticated then redirect him to the login page
@@ -41,8 +42,6 @@ module.exports = (passport) => {
 		successRedirect: '/home',
 		failureRedirect: '/login',
 		failureFlash : true
-	}, (req, res) => {
-		console.log('just POSTed to login');
 	}));
 
 	/* GET Registration Page */
@@ -67,14 +66,15 @@ module.exports = (passport) => {
 
 	/* GET Home Page */
 	app.get('/home', isAuthenticated, (req, res) => {
+		console.log('in /home. req is ' + req);
 		res.render('home', {
-			id: req.params.id
+			// id: req.user
 			// user: req.user
 		});
 	});
 
 	/* Handle Logout */
-	app.get('/signout', function(req, res) {
+	app.get('/signout', (req, res) => {
 		req.logout();
 		res.redirect('/');
 	});
