@@ -10,7 +10,10 @@ module.exports = function(sequelize, DataTypes) {
   }, {
     classMethods: {
       associate: function(models) {
-        User.hasMany(models.Message);
+        User.hasMany(models.Message, {
+          onDelete: 'cascade',
+          hooks: true
+        });
       }
     },
     instanceMethods: {

@@ -81,16 +81,34 @@ app.put('/user/:id', function(req, res) {
     }
   }).then(function(user) {
     if(user){
-      todo.updateAttributes({
-        title: req.body.title,
-        complete: req.body.complete
+      user.updateAttributes({
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        email: req.body.email,
+        password: req.body.password,
       }).then(function(user) {
-        res.send(user);
+        res.json(user);
       });
     }
   });
 });
 
+
+// JSON endpoint: Delete a single user
+app.delete('/user/:id', function(req, res) {
+  models.User.find({
+    where: {
+      id: req.params.id
+    }
+  }).then( (user) => {
+    if(user){
+      var deletedUser = user;
+      user.destroy().then( () => {
+        res.json(deletedUser);
+      });
+    }
+  });
+});
 
 // JSON endpoint: Retrieve a single message
 app.get('/message/:id', function(req, res) {
@@ -105,11 +123,11 @@ app.get('/message/:id', function(req, res) {
 
 
 // JSON endpoint: Create a single message
-app.post('/message/new/:recipient_id', function(req, res) {
+app.post('/message/new/:room', function(req, res) {
   models.Message.create({
     text: req.body.text,
-    sender_id: req.body.user_id,
-    recipient_id: req.params.recipient_id
+    UserId: req.body.user_id,
+    room: req.params.room
   }).then(function(message) {
     res.json(message);
   });
