@@ -11,11 +11,16 @@
   ```
 
   ```
+  mysql> drop if exists database database_development;
+  ```
+
+
+  ```
   mysql> create database database_development;
   ```
 
   ```
-  mysql> \\q
+  mysql> \q
   ```
 
   2. Install Node modules
@@ -25,8 +30,15 @@
   ```
 
 
-  3. Run tests. Currently there is no working front-end, only user API routes
+  3. Start the application
 
   ```
-  $ mocha
+  $ npm start
   ```
+
+  4. View in browser by default : http://localhost:3000/
+
+
+## Notes
+
+Sessions don't persist, so login is required once you navigate away.
