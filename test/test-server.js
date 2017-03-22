@@ -1,3 +1,5 @@
+// DO NOT RUN THESE - deprecated
+
 var chai = require('chai');
 var chaiHttp = require('chai-http');
 var server = require('../server/app');

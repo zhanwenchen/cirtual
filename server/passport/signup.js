@@ -2,7 +2,7 @@ var LocalStrategy = require('passport-local').Strategy;
 var bCrypt = require('bcrypt-nodejs');
 var models = require('../models/index');
 
-module.exports = function(passport){
+module.exports = (passport) => {
 
 	passport.use('signup', new LocalStrategy({
 		usernameField: 'email',
